@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, TextInput, StyleSheet} from 'react-native';
 
-export default function MarkdownEditor({ onCodeChange }){
+export default function MarkdownEditor({ onCodeChange, defaultCode }){
     return (
         <View style={styles.container}>
             <TextInput
@@ -9,6 +9,7 @@ export default function MarkdownEditor({ onCodeChange }){
                 placeholder={'You can write your markdown text here.'} // this can be changed with i18n text if we wanted multi-lang support
                 onChangeText={onCodeChange}
                 style={styles.input}
+                defaultValue={defaultCode}
             />
         </View>
     )

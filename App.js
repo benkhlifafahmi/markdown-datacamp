@@ -1,16 +1,32 @@
 import { StatusBar } from 'expo-status-bar';
-import {useState, useRef} from "react";
+import {useState, useEffect} from "react";
 import {KeyboardAvoidingView, Platform, SafeAreaView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import MarkdownEditor from "./components/MarkdownEditor";
 import MarkdownPreview from "./components/MarkdownPreview";
+import {storeData, retriveData} from './utils/storage';
 
 export default function App() {
   const [code, setCode] = useState('');
+  const [defaultCode, setDefaultCode] = useState(defaultCode)
+  const onCodeChange = (value) => {
+    storeData('code', value);
+    setCode(value);
+  }
+  // we can add loader here when retriving data.
+  useEffect(() => {
+    // when we open the app we load old code.
+    const loadSavedData = async () => {
+      const data = await retriveData('code');
+      setCode(data ?? '')
+      setDefaultCode(data ?? '')
+    }
+    loadSavedData();
+  }, []);
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'height': 'padding'}>
         <View style={styles.editor}>
-          <MarkdownEditor onCodeChange={setCode} />
+          <MarkdownEditor onCodeChange={onCodeChange} defaultCode={defaultCode}/>
           <MarkdownPreview code={code}/>
         </View>
         <View style={styles.buttonContainer}>

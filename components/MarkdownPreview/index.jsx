@@ -3,8 +3,8 @@ import {ScrollView, StyleSheet} from "react-native";
 import Markdown from 'react-native-markdown-display';
 export default function MarkdownPreview({code}) {
     return (
-        <ScrollView style={styles.container}>
-            <Markdown>
+        <ScrollView style={styles.container} testID="markdown-preview-container">
+            <Markdown testID="markdown-preview">
                 {code}
             </Markdown>
         </ScrollView>
