@@ -3,8 +3,9 @@ import {View, TextInput, StyleSheet} from 'react-native';
 
 export default function MarkdownEditor({ onCodeChange, defaultCode }){
     return (
-        <View style={styles.container}>
+        <View style={styles.container} testID={'markdown-editor-container'}>
             <TextInput
+                testID={'markdown-editor-input'}
                 multiline
                 placeholder={'You can write your markdown text here.'} // this can be changed with i18n text if we wanted multi-lang support
                 onChangeText={onCodeChange}

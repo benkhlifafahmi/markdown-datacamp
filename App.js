@@ -23,7 +23,7 @@ export default function App() {
     loadSavedData();
   }, []);
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} testID={'app-container'}>
       <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'height': 'padding'}>
         <View style={styles.editor}>
           <MarkdownEditor onCodeChange={onCodeChange} defaultCode={defaultCode}/>

@@ -5,7 +5,7 @@ export default function MarkdownPreview({code}) {
     return (
         <ScrollView style={styles.container} testID="markdown-preview-container">
             <Markdown testID="markdown-preview">
-                {code}
+                {code ?? ''}
             </Markdown>
         </ScrollView>
     )

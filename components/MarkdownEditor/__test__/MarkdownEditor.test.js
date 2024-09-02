@@ -1,6 +1,6 @@
 import React from 'react';
-import {render} from '@testing-library/react-native';
-import MarkdownEditor from '../MarkdownEditor';
+import {render, screen} from '@testing-library/react-native';
+import MarkdownEditor from '../../MarkdownEditor';
 
 
 describe('<MarkdownEditor />', () => {
