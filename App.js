@@ -1,13 +1,17 @@
 import { StatusBar } from 'expo-status-bar';
 import {useState, useEffect} from "react";
-import {KeyboardAvoidingView, Platform, SafeAreaView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {KeyboardAvoidingView, Platform, SafeAreaView, StyleSheet, Text, TouchableOpacity, View, Dimensions} from 'react-native';
 import MarkdownEditor from "./components/MarkdownEditor";
 import MarkdownPreview from "./components/MarkdownPreview";
 import {storeData, retriveData} from './utils/storage';
+import useOrientation from "./hooks/useOrientation";
 
 export default function App() {
   const [code, setCode] = useState('');
   const [defaultCode, setDefaultCode] = useState(defaultCode)
+
+  const {isPortrait} = useOrientation();
+
   const onCodeChange = (value) => {
     storeData('code', value);
     setCode(value);
@@ -25,7 +29,7 @@ export default function App() {
   return (
     <SafeAreaView style={styles.container} testID={'app-container'}>
       <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'height': 'padding'}>
-        <View style={styles.editor}>
+        <View style={[styles.editor, isPortrait ? styles.portrait : styles.landscape]}>
           <MarkdownEditor onCodeChange={onCodeChange} defaultCode={defaultCode}/>
           <MarkdownPreview code={code}/>
         </View>
@@ -47,7 +51,12 @@ const styles = StyleSheet.create({
   },
   editor: {
     flex: 1,
+  },
+  landscape: {
     flexDirection: 'row',
+  },
+  portrait: {
+    flexDirection: 'column'
   },
   buttonContainer: {
     justifyContent: 'center',
