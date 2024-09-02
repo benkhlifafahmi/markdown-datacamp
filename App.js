@@ -9,8 +9,8 @@ import useOrientation from "./hooks/useOrientation";
 export default function App() {
   const [code, setCode] = useState('');
   const [defaultCode, setDefaultCode] = useState(defaultCode)
-
-  const {isPortrait} = useOrientation();
+  const [editMode, setEditMode] = useState(true)
+  const {isPortrait, isSmallScreen} = useOrientation();
 
   const onCodeChange = (value) => {
     storeData('code', value);
@@ -26,18 +26,30 @@ export default function App() {
     }
     loadSavedData();
   }, []);
+
   return (
     <SafeAreaView style={styles.container} testID={'app-container'}>
       <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'height': 'padding'}>
         <View style={[styles.editor, isPortrait ? styles.portrait : styles.landscape]}>
-          <MarkdownEditor onCodeChange={onCodeChange} defaultCode={defaultCode}/>
-          <MarkdownPreview code={code}/>
+          {
+            (!isSmallScreen || (isSmallScreen && editMode)) && (
+              <MarkdownEditor onCodeChange={onCodeChange} defaultCode={defaultCode}/>
+            )
+          }
+          {
+            (!isSmallScreen || (isSmallScreen && !editMode)) && (
+                <MarkdownPreview code={code}/>
+            )
+          }
         </View>
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.button}>
-            <Text style={styles.buttonText}>Render</Text>
-          </TouchableOpacity>
-        </View>
+        {
+          isSmallScreen &&
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity style={styles.button} onPress={() => setEditMode(!editMode)}>
+              <Text style={styles.buttonText}>{editMode ? 'Preview' : 'Edit'}</Text>
+            </TouchableOpacity>
+          </View>
+        }
         <StatusBar style="auto" />
       </KeyboardAvoidingView>
     </SafeAreaView>
