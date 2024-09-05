@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import {useState, useEffect, useRef} from "react";
+import {useState, useEffect, useRef, useCallback} from "react";
 import {
   KeyboardAvoidingView,
   Platform,
@@ -22,31 +22,6 @@ export default function App() {
   const [editMode, setEditMode] = useState(true)
   const {isPortrait, isSmallScreen} = useOrientation();
 
-  const onCodeChange = (index, value) => {
-    //storeData('code', value);
-    const _blocks = [...blocks]
-    _blocks[index].code = value;
-    setBlocks(_blocks)
-  }
-  const togglePreviewBlock = (index) => {
-    const _blocks = [...blocks]
-    _blocks[index].isInPreview = !_blocks[index].isInPreview;
-    setBlocks(_blocks)
-  }
-  const moveUp = (index) => {
-    const _blocks = [...blocks]
-    _blocks[index - 1] = blocks[index];
-    _blocks[index] = blocks[index - 1];
-    setBlocks(_blocks)
-    setFocusedItemIndex(index - 1)
-  }
-  const moveDown = (index) => {
-    const _blocks = [...blocks]
-    _blocks[index + 1] = blocks[index];
-    _blocks[index] = blocks[index + 1];
-    setBlocks(_blocks)
-    setFocusedItemIndex(index + 1)
-  }
   // we can add loader here when retriving data.
   useEffect(() => {
     // when we open the app we load old code.
@@ -79,6 +54,38 @@ export default function App() {
       })
     }
   }, [focusedItemIndex]);
+
+  const onCodeChange = useCallback((index, value) => {
+    const _blocks = [...blocks];
+    _blocks[index].code = value;
+    setBlocks(_blocks);
+  }, [blocks]);
+
+  const togglePreviewBlock = useCallback((index) => {
+    const _blocks = [...blocks];
+    _blocks[index].isInPreview = !_blocks[index].isInPreview;
+    setBlocks(_blocks);
+  }, [blocks]);
+
+  const moveUp = useCallback((index) => {
+    if (index > 0) {
+      const _blocks = [...blocks];
+      [_blocks[index - 1], _blocks[index]] = [_blocks[index], _blocks[index - 1]];
+      setBlocks(_blocks);
+      setFocusedItemIndex(index - 1);
+    }
+  }, [blocks]);
+
+  const moveDown = useCallback((index) => {
+    if (index < blocks.length - 1) {
+      const _blocks = [...blocks];
+      [_blocks[index], _blocks[index + 1]] = [_blocks[index + 1], _blocks[index]];
+      setBlocks(_blocks);
+      setFocusedItemIndex(index + 1);
+    }
+  }, [blocks]);
+
+
   const removeBlock = (index) => {
     const _blocks = [...blocks]
     _blocks.splice(index, 1)
@@ -132,23 +139,28 @@ export default function App() {
             ref={blocksListRef}
             removeClippedSubviews={false}
             keyboardShouldPersistTaps={'handled'}
+            ListFooterComponent={
+              <View style={styles.buttonContainer}>
+                <TouchableOpacity
+                    style={styles.button}
+                    onPress={() => {
+                      setBlocks([
+                        ...blocks,
+                        {
+                          code: '',
+                          isInPreview: false,
+                        }
+                      ]);
+                      blocksListRef?.current?.scrollToEnd({animated: true});
+                    }}
+                >
+                  <Text style={styles.buttonText}>{editMode ? 'Preview' : 'Edit'}</Text>
+                </TouchableOpacity>
+              </View>
+            }
+            ListFooterComponentStyle={{ paddingBottom: 20 }}
         />
       </KeyboardAvoidingView>
-
-      <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.button} onPress={() => {
-            setBlocks([
-                ...blocks,
-                {
-                  code: '',
-                  isInPreview: false,
-                }
-            ])
-            blocksListRef?.current?.scrollToEnd({animated: true})
-          }}>
-            <Text style={styles.buttonText}>{editMode ? 'Preview' : 'Edit'}</Text>
-          </TouchableOpacity>
-        </View>
         <StatusBar style="auto" />
     </SafeAreaView>
   );

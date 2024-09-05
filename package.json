@@ -14,10 +14,7 @@
     "transformIgnorePatterns": [
       "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@sentry/react-native|native-base|react-native-svg)"
     ],
-    "verbose": true,
-    "setupFiles": [
-      "__mocks__/@react-native-async-storage/async-storage.js"
-    ]
+    "verbose": true
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "1.23.1",
