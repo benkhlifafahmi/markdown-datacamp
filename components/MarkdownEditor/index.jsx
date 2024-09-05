@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, TextInput, StyleSheet} from 'react-native';
 
-export default function MarkdownEditor({ onCodeChange, defaultCode }){
+export default function MarkdownEditor({ onCodeChange, defaultCode, onFocus }){
     return (
         <View style={styles.container} testID={'markdown-editor-container'}>
             <TextInput
@@ -11,6 +11,7 @@ export default function MarkdownEditor({ onCodeChange, defaultCode }){
                 onChangeText={onCodeChange}
                 style={styles.input}
                 defaultValue={defaultCode}
+                onFocus={onFocus}
             />
         </View>
     )
